@@ -44,7 +44,7 @@ const Form = ({ books, setBooks }) => {
       >
         {error && (
           <Error>
-            <p>All fields are required</p>{" "}
+            <p>All fields are required</p>
           </Error>
         )}
         <div>
