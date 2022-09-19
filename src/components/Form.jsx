@@ -1,13 +1,29 @@
 import { useState, useEffect } from "react";
 import Error from "./Error";
 
-const Form = ({ books, setBooks }) => {
+const Form = ({ books, setBooks, book, setBook }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
 
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (Object.keys(book).length > 0) {
+      setTitle(book.title);
+      setAuthor(book.author);
+      setDate(book.date);
+      setDescription(book.description);
+    } else {
+    }
+  }, [book]);
+
+  const generateId = () => {
+    const random = Math.random().toString(36).substring(2);
+    const date = Date.now().toString(36);
+    return random + date;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,6 +32,7 @@ const Form = ({ books, setBooks }) => {
     } else {
       setError(false);
 
+      //New Book
       const bookObj = {
         title,
         author,
@@ -23,8 +40,22 @@ const Form = ({ books, setBooks }) => {
         description,
       };
 
-      setBooks([...books, bookObj]);
+      if (book.id) {
+        //Editing Book
+        bookObj.id = book.id;
 
+        const updatedBooks = books.map((bookState) =>
+          bookState.id === book.id ? bookObj : bookState
+        );
+        setBooks(updatedBooks);
+        setBook({}); //Limpiando el state
+      } else {
+        //Creating new book
+        bookObj.id = generateId();
+        setBooks([...books, bookObj]);
+      }
+
+      //Reset Form
       setTitle("");
       setAuthor("");
       setDate("");
@@ -105,7 +136,7 @@ const Form = ({ books, setBooks }) => {
         </div>
         <input
           type="submit"
-          value="Add Book"
+          value={book.id ? "Edit Book" : "Add Book"}
           className="bg-blue-600 text-white p-4 w-full uppercase font-bold cursor-pointer hover:bg-blue-700 transition-color"
         />
       </form>
