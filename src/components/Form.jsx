@@ -29,6 +29,9 @@ const Form = ({ books, setBooks, book, setBook }) => {
     e.preventDefault();
     if ([title, author, date, description].includes("")) {
       setError(true);
+      setTimeout(() => {
+        setError(false);
+      }, 2500);
     } else {
       setError(false);
 
